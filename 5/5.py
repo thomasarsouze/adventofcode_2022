@@ -2,11 +2,14 @@ f = open("input.txt", "r")
 inputs = f.read()
 
 ## Part 1
-def move(instructions):
+def move(instructions, part2=False):
     nb_moves, origin, arrival = instructions
     cranes = stacks[origin-1][-nb_moves:]
     del stacks[origin-1][len(stacks[origin-1]) - nb_moves:]
-    stacks[arrival-1] += cranes[::-1]
+    if part2:
+        stacks[arrival-1] += cranes
+    else:
+        stacks[arrival-1] += cranes[::-1]
 
 def parse_input(inputs):
     initial_stacks, instructions = inputs.split('\n\n')
@@ -33,13 +36,11 @@ for stack in range(len(stacks)):
 print('Top of the stacks cranes : ', top_stack)
 
 ## Part 2
-def partial_overlap(assignment1, assignment2):
-    if (len(set(assignment1) & set(assignment2)) > 0 ):
-        return True
-    else:
-        return False
+stacks, instructions = parse_input(inputs)
+for instruction in instructions:
+    move(instruction, part2=True)
+top_stack = ''
+for stack in range(len(stacks)):
+    top_stack+=stacks[stack][-1]
 
-partialy_contained = [partial_overlap(assignment1, assignment2) for assignment1, assignment2 in assignments]
-
-print('Sum of pairs with partial overlap : ',sum(partialy_contained))
-
+print('Top of the stacks cranes : ', top_stack)
